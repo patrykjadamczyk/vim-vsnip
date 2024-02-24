@@ -52,6 +52,14 @@ function! vsnip#source#create(path) abort
   for [l:key, l:value] in items(l:json)
     if s:is_snippet(l:value)
       call add(l:source, s:format_snippet(l:key, l:value))
+    elseif empty(l:value)
+      continue
+    elseif type(l:value) == type([])
+      for [l:key, l:value_] in l:value
+        if s:is_snippet(l:value_)
+          call add(l:source, s:format_snippet(l:key, l:value_))
+        endif
+      endfor
     else
       for [l:key, l:value_] in items(l:value)
         if s:is_snippet(l:value_)
